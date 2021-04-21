@@ -41,7 +41,21 @@
 // versão estática da página - a primeira pessoa que acessar, faz o request e todas as outras pessoas acessam o html estático
 // revalidate - em segundos - de qto em qto tempo quero uma nova chamada da api
 
-export default function Home(props) {  return (
+import { GetStaticProps } from 'next';
+import { api } from '../services/api';
+
+type HomeProps = {
+  episodes: Episode[];
+}
+
+type Episode = {
+    id: string;
+    title: string;
+    memebers: string;
+    //..
+}
+
+export default function Home(props: HomeProps) {  return (
   <div>
     <h1>Index</h1>
     <p>{JSON.stringify(props.episodes)}</p>
@@ -49,9 +63,14 @@ export default function Home(props) {  return (
   );
 }
 
-export async function getStaticProps() {
-  const response = await fetch('http://localhost:3333/episodes')
-  const data = await response.json()
+export const getStaticProps: GetStaticProps = async () => {
+  const { data } = await api.get('episodes', {
+    params: {
+      _limit: 12,
+      _sort: 'publisehd_at',
+      _order: 'desc'
+    }
+  })
 
   return {
     props: {
