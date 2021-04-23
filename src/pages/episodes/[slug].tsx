@@ -3,6 +3,7 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { api } from '../../services/api';
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString';
 import Image from 'next/image'
 
@@ -25,6 +26,12 @@ type EpisodeProps = {
 }
 
 export default function Episode({ episode }: EpisodeProps) {
+  // const router = useRouter();
+
+  // if (router.isFallback) {
+  //   return <p>Carregando...</p>
+  // } não é necessário, pois está em fallback: 'blocking'
+
   return (
     <div className={styles.episode}>
       <div className={styles.thumbnailContainer}>
@@ -60,17 +67,28 @@ export default function Episode({ episode }: EpisodeProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [
-      {
-        params: {
-          slug: "a-importancia-da-contribuicao-em-open-source"
-        }
+  const { data } = await api.get('episodes', {
+    params: {
+      _limit: 2,
+      _sort: 'publisehd_at',
+      _order: 'desc'
+    }
+  })
+
+  const paths = data.map(episode => {
+    return {
+      params: {
+        slug: episode.id
       }
-    ],
-    fallback: 'blocking'
+    }
+  })
+
+  return {
+    paths: paths,
+    fallback: true
   }
 }
+// fallback: 'blocking'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { slug } = ctx.params
