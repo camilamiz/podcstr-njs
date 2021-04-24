@@ -21,3 +21,6 @@ function MyApp({ Component, pageProps }) {
 }
 
 export default MyApp
+
+
+// TODO make it pwa (next-pwa), make it responsive, dark theme, make it desktop version (electron)
