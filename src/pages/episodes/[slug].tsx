@@ -3,11 +3,11 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { api } from '../../services/api';
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString';
 import Image from 'next/image'
 
 import styles from './episode.module.scss';
+import { usePlayer } from '../../contexts/PlayerContext';
 
 type Episode = {
   id: string;
@@ -32,6 +32,8 @@ export default function Episode({ episode }: EpisodeProps) {
   //   return <p>Carregando...</p>
   // } não é necessário, pois está em fallback: 'blocking'
 
+  const { play } = usePlayer();
+
   return (
     <div className={styles.episode}>
       <div className={styles.thumbnailContainer}>
@@ -47,7 +49,7 @@ export default function Episode({ episode }: EpisodeProps) {
           objectFit="cover"
         />
         <button type="button">
-          <img src="/play.svg" alt="Tocar episódio"/>
+          <img src="/play.svg" alt="Tocar episódio" onClick={() => play(episode)}/>
         </button>
       </div>
 

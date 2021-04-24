@@ -41,8 +41,7 @@
 // versão estática da página - a primeira pessoa que acessar, faz o request e todas as outras pessoas acessam o html estático
 // revalidate - em segundos - de qto em qto tempo quero uma nova chamada da api
 
-import { useContext } from 'react';
-import { PlayerContext } from '../contexts/PlayerContext';
+import { usePlayer } from '../contexts/PlayerContext';
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -71,7 +70,7 @@ type Episode = {
 }
 
 export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
-  const { playList } = useContext(PlayerContext);
+  const { playList } = usePlayer();
 
   const episodeList = [...latestEpisodes, ...allEpisodes];
 
